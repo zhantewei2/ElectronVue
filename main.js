@@ -1,24 +1,24 @@
-const electron = require('electron')
-// Module to control application life.
-const app = electron.app
-// Module to create native browser window.
-const BrowserWindow = electron.BrowserWindow
+const {app,BrowserWindow,ipcMain,Menu,Tray} = require('electron')
 
 const path = require('path')
-const url = require('url')
+const url = require('url');
+const join=(...args)=>path.join(__dirname,...args);
+require('./src/net.js');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
-
 function createWindow () {
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 800, height: 600})
+  global._mainWin=mainWindow = new BrowserWindow({
+    width: 800, height: 600,frame:false,icon:join('public/1.ico'),title:'ztwApp',
+    transparent:true
+  });
 
   // and load the index.html of the app.
   mainWindow.loadURL(url.format({
-    pathname: path.join(__dirname, 'index.html'),
-    protocol: 'file:',
+    pathname: 'localhost:8080',
+    protocol: 'http:',
     slashes: true
   }))
 
@@ -33,11 +33,21 @@ function createWindow () {
     mainWindow = null
   })
 }
+  ipcMain.on('ondragstart', (event, filePath) => {
+    event.sender.startDrag({
+      file: filePath,
+      icon: '/path/to/icon.png'
+    })
+  })
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
-app.on('ready', createWindow)
+
+
+app.on('ready',()=>{
+
+  createWindow();
+  require('./src/createTray.js');
+
+} )
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
