@@ -1,4 +1,4 @@
-Electron + Vue 事例展示
+Electron + Vue 实例展示
 ---
 
 ### Install Electron project
@@ -35,4 +35,4 @@ Start运行项目
 
 web页面通过`webSocket`交互主进程，借此主进程配合web页面完成本地操作。
 
-`system tray`使用新建`browerWindow`,到达自定义contextMenu的目的。
+`system tray`使用新建`browerWindow`,达到自定义contextMenu的目的。
